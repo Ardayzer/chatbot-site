@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <style>
-    /* --- SENİN TASARIM KODLARIN (AYNEN KORUNDU) --- */
+    /* --- TEMEL AYARLAR --- */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -15,14 +15,24 @@
     }
 
     body {
-      background: #f3f4f6;
+      /* GÖRSEL AYARI BURADA */
+      /* Dosya adının GitHub'a yüklediğinizle BİREBİR aynı olduğundan emin olun (büyük/küçük harf duyarlı) */
+      background-image: url('./image_305c9e.jpg'); 
+      
+      background-size: cover; 
+      background-position: center top;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
       padding: 16px;
+      overflow: hidden; 
     }
 
+    /* --- CHAT KUTUSU (WRAPPER) --- */
     .chat-wrapper {
       background: #ffffff;
       width: 100%;
@@ -30,28 +40,106 @@
       height: 80vh;
       max-height: 720px;
       border-radius: 16px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-      
-      /* Taşan kısımları gizle ve iframe'i içine hapset */
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
       overflow: hidden;
       display: flex; 
       flex-direction: column;
+      
+      /* Animasyon geçiş ayarları */
+      transition: all 0.4s ease-in-out;
+      opacity: 0; 
+      transform: scale(0.9) translateY(20px);
+      pointer-events: none;
+      
+      position: relative;
+      z-index: 10;
     }
 
-    /* --- IFRAME STİLİ (YENİ EKLENDİ) --- */
-    /* Bu, n8n'i senin kutuna tam oturtur */
-    iframe {
-        width: 100%;
-        height: 100%;
-        border: none; /* Kenarlıkları kaldır */
+    .chat-wrapper.active {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+      pointer-events: all;
     }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* --- AÇIP KAPATMA BUTONU --- */
+    .toggle-btn {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 60px;
+      height: 60px;
+      background-color: #D32F2F; 
+      color: white;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.3s ease, background-color 0.3s;
+      z-index: 20; 
+    }
+
+    .toggle-btn:hover {
+      transform: scale(1.1);
+      background-color: #b71c1c;
+    }
+
+    .toggle-btn:active {
+      transform: scale(0.95);
+    }
+
+    .icon-open, .icon-close {
+      position: absolute;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      width: 30px;
+      height: 30px;
+    }
+
+    .chat-open .icon-open {
+      opacity: 0;
+      transform: rotate(90deg);
+    }
+    .chat-open .icon-close {
+      opacity: 1;
+      transform: rotate(0);
+    }
+
+    .icon-close {
+      opacity: 0;
+      transform: rotate(-90deg);
+    }
+    
   </style>
 </head>
 <body>
 
-  <div class="chat-wrapper">
+  <!-- Chat Kutusu -->
+  <div class="chat-wrapper" id="chatWrapper">
      <iframe src="https://z2o4qssc.rpcl.app/webhook/e281b04a-a777-4918-be69-c2be8916c79b/chat"></iframe>
   </div>
+
+  <!-- Yuvarlak Açma/Kapama Butonu -->
+  <button class="toggle-btn" id="toggleBtn" onclick="toggleChat()">
+    <svg class="icon-open" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+    <svg class="icon-close" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+  </button>
+
+  <script>
+    function toggleChat() {
+      const wrapper = document.getElementById('chatWrapper');
+      const btn = document.getElementById('toggleBtn');
+      wrapper.classList.toggle('active');
+      btn.classList.toggle('chat-open');
+    }
+  </script>
 
 </body>
 </html>
