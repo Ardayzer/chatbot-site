@@ -271,8 +271,10 @@
         }
 
         const data = await res.json();
+        console.log("n8n raw response:", JSON.stringify(data, null, 2));
         // n8n "allIncomingItems" array döndürüyor, ilk elemanı al
         const item = Array.isArray(data) ? data[0] : data;
+        console.log("Parsed item:", JSON.stringify(item, null, 2));
         const answer =
         item?.output ??
         item?.answer ??
