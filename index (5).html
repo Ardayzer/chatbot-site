@@ -252,6 +252,7 @@
       setStatus("Yanıtlanıyor...");
 
       try {
+        console.log("Sending request to:", N8N_WEBHOOK_URL);
         const res = await fetch(N8N_WEBHOOK_URL, {
           method: "POST",
           headers: {
@@ -264,13 +265,18 @@
           })
         });
 
+        console.log("Response status:", res.status);
+
         if (!res.ok) {
           // 401 vs 500 vs 404
           const errText = await res.text().catch(() => "");
+          console.log("Error response:", errText);
           throw new Error(`HTTP ${res.status} - ${errText || "Request failed"}`);
         }
 
-        const data = await res.json();
+        const rawText = await res.text();
+        console.log("Raw response text:", rawText);
+        const data = rawText ? JSON.parse(rawText) : null;
         console.log("n8n raw response:", JSON.stringify(data, null, 2));
         // n8n "allIncomingItems" array döndürüyor, ilk elemanı al
         const item = Array.isArray(data) ? data[0] : data;
